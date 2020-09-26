@@ -1,0 +1,9 @@
+package com.xabe.quarkus.kafka.consumer.infrastructure.messaging;
+
+import org.apache.avro.specific.SpecificRecord;
+
+public interface EventHandler<T extends SpecificRecord> {
+
+  void handle(T paylooad);
+
+}

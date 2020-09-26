@@ -1,0 +1,69 @@
+# Configuration file
+# key = value
+
+quarkus:
+  native:
+    additional-build-args: "-H:-ParseRuntimeOptions"
+  package:
+    main-class: com.xabe.quarkus.kafka.consumer.App
+  log:
+    console:
+      enable: true
+      level: DEBUG
+    category:
+      io.quarkus:
+        level: INFO
+      org.jboss.resteasy:
+        level: INFO
+      io.smallrye.reactive.messaging.kafka:
+        level: DEBUG
+  application:
+    name: quarkus-consumer
+  banner:
+    enabled: false
+  http:
+    test-port: 8008
+    port: 8008
+    root-path: /api
+
+mp:
+  messaging:
+    incoming:
+      input:
+        connector: smallrye-kafka
+        topic: car.v1
+        key:
+          deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        value:
+          deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+        schema:
+          reflection: false
+          registry:
+            url: http://localhost:8081
+        request:
+          timeout:
+            ms: 30000
+        specific:
+          avro:
+            reader: true
+        use:
+          latest:
+            version: true
+        auto:
+          offset:
+            reset: latest
+          register:
+            schemas: false
+          commit:
+            interval:
+              ms: 100
+        group:
+          id: car-consumer-group
+        broadcast: false
+        enable:
+          auto:
+            commit: false
+        partitions: 1
+        bootstrap:
+          servers:
+            - http://localhost:9092
