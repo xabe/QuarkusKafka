@@ -5,8 +5,6 @@ quarkus:
   native:
     additional-build-args:
       - "-H:-ParseRuntimeOptions"
-      - "-H:+TraceClassInitialization"
-      - "-H:GenerateDebugInfo=1"
   package:
     main-class: com.xabe.quarkus.kafka.producer.App
   log:

@@ -3,7 +3,8 @@
 
 quarkus:
   native:
-    additional-build-args: "-H:-ParseRuntimeOptions"
+    additional-build-args:
+      - "-H:-ParseRuntimeOptions"
   package:
     main-class: com.xabe.quarkus.kafka.consumer.App
   log:

@@ -9,6 +9,7 @@
     <modules>
         <module>quarkus-consumer</module>
         <module>quarkus-avro</module>
+        <module>quarkus-producer</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
