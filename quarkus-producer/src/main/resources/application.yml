@@ -1,0 +1,76 @@
+# Configuration file
+# key = value
+
+quarkus:
+  native:
+    additional-build-args:
+      - "-H:-ParseRuntimeOptions"
+      - "-H:+TraceClassInitialization"
+      - "-H:GenerateDebugInfo=1"
+  package:
+    main-class: com.xabe.quarkus.kafka.producer.App
+  log:
+    console:
+      enable: true
+      level: DEBUG
+    category:
+      io.quarkus:
+        level: INFO
+      org.jboss.resteasy:
+        level: INFO
+      io.smallrye.reactive.messaging.kafka:
+        level: DEBUG
+  application:
+    name: quarkus-producer
+  banner:
+    enabled: false
+  http:
+    test-port: 8009
+    port: 8009
+    root-path: /api
+
+mp:
+  messaging:
+    outgoing:
+      output:
+        connector: smallrye-kafka
+        topic: car.v1
+        acks: all
+        key:
+          serializer: org.apache.kafka.common.serialization.StringSerializer
+        value:
+          serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+        schema:
+          reflection: false
+          registry:
+            url: http://localhost:8081
+        request:
+          timeout:
+            ms: 30000
+        specific:
+          avro:
+            reader: true
+        use:
+          latest:
+            version: true
+        max-inflight-messages: 5
+        compression:
+          type: none
+        enable:
+          idempotence: true
+        retries: 10
+        max:
+          block:
+            ms: 1000
+        linger:
+          ms: 20
+        batch:
+          size: 32768
+        auto:
+          register:
+            schemas: false
+        partition: -1
+        broadcast: false
+        bootstrap:
+          servers:
+            - http://localhost:9092
