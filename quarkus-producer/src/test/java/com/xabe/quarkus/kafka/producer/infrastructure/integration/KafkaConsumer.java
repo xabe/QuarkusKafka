@@ -91,8 +91,8 @@ public class KafkaConsumer {
 
           for (final ConsumerRecord<String, MessageEnvelope> record : records) {
             try {
-              LOGGER.info("Received event {}", record);
               MESSAGE_KAFKA.put(Tuple2.tuple(record.key(), record.value()));
+              LOGGER.info("Received event {}", record);
             } catch (final Exception e) {
 
             }

@@ -6,6 +6,13 @@ quarkus:
     additional-build-args:
       - "-H:+TraceClassInitialization"
       - "-H:+PrintClassInitialization"
+      - "-H:+ReportExceptionStackTraces"
+      - "-H:GenerateDebugInfo=1"
+      - "-H:+StackTrace"
+      - "-H:ResourceConfigurationFiles=resources-config.json"
+      - "-H:ReflectionConfigurationFiles=reflection-config.json"
+      - "-H:ClassInitialization=org.apache.avro.generic.GenericDatumReader:run_time"
+      - "-H:ClassInitialization=com.xabe.avro.v1.MessageEnvelope:run_time"
   package:
     main-class: com.xabe.quarkus.kafka.producer.App
   log:

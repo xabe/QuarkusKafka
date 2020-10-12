@@ -6,6 +6,11 @@ quarkus:
     additional-build-args:
       - "-H:+TraceClassInitialization"
       - "-H:+PrintClassInitialization"
+      - "-H:+ReportExceptionStackTraces"
+      - "-H:GenerateDebugInfo=1"
+      - "-H:+StackTrace"
+      - "--native-image-info"
+      - "--verbose"
   package:
     main-class: com.xabe.quarkus.kafka.consumer.App
   log:
