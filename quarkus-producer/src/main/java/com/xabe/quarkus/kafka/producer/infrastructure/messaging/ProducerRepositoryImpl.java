@@ -17,8 +17,7 @@ import javax.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class ProducerRepositoryImpl implements ProducerRepository {
@@ -27,7 +26,7 @@ public class ProducerRepositoryImpl implements ProducerRepository {
 
   public static final String CAR = "car";
 
-  private final Logger logger = LoggerFactory.getLogger(ProducerRepositoryImpl.class);
+  private final Logger logger = Logger.getLogger(ProducerRepositoryImpl.class);
 
   @Inject
   Clock clock;
@@ -52,7 +51,7 @@ public class ProducerRepositoryImpl implements ProducerRepository {
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData("create")).setPayload(carCreated)
         .build();
     this.kafkaEmitter.send(Message.of(messageEnvelope, this.createMetaDataKafka(car.getId())));
-    this.logger.info("Send Command CarCreated {}", carCreated);
+    this.logger.infof("Send Command CarCreated {%s}", messageEnvelope);
   }
 
   @Override
@@ -62,7 +61,7 @@ public class ProducerRepositoryImpl implements ProducerRepository {
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData("update")).setPayload(carUpdated)
         .build();
     this.kafkaEmitter.send(Message.of(messageEnvelope, this.createMetaDataKafka(car.getId())));
-    this.logger.info("Send Command CarUpdate {}", carUpdated);
+    this.logger.infof("Send Command CarUpdate {%s}", messageEnvelope);
   }
 
   @Override
@@ -72,7 +71,7 @@ public class ProducerRepositoryImpl implements ProducerRepository {
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData("delete")).setPayload(carDeleted)
         .build();
     this.kafkaEmitter.send(Message.of(messageEnvelope, this.createMetaDataKafka(car.getId())));
-    this.logger.info("Send Command CarDelete {}", carDeleted);
+    this.logger.infof("Send Command CarDelete {%s}", messageEnvelope);
   }
 
   private Metadata createMetaData(final String action) {

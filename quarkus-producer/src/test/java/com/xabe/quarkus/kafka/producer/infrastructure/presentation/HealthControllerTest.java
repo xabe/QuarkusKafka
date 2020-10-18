@@ -1,4 +1,4 @@
-package com.xabe.quarkus.kafka.producer.infrastructure.persentation;
+package com.xabe.quarkus.kafka.producer.infrastructure.presentation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -20,5 +20,4 @@ class HealthControllerTest {
   public void shouldGetOK() throws Exception {
     assertThat(this.healthController.healthCheck(), is(notNullValue()));
   }
-
 }

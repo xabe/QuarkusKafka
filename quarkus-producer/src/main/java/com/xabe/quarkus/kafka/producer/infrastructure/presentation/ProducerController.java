@@ -1,22 +1,27 @@
-package com.xabe.quarkus.kafka.producer.infrastructure.persentation;
+package com.xabe.quarkus.kafka.producer.infrastructure.presentation;
 
 import com.xabe.quarkus.kafka.producer.infrastructure.application.ProducerUseCase;
-import com.xabe.quarkus.kafka.producer.infrastructure.persentation.payload.CarPayload;
+import com.xabe.quarkus.kafka.producer.infrastructure.presentation.payload.CarPayload;
 import java.time.Clock;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.validation.Valid;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Path("/producer/car")
 @Singleton
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class ProducerController {
 
   public static final String DELETE = "delete";
@@ -39,14 +44,14 @@ public class ProducerController {
 
   @POST
   public Response createCar(@Valid final CarPayload carPayload) {
-    this.producerUseCase.createCar(carPayload.toBuilder().sentAt(this.clock.millis()).build());
+    this.producerUseCase.createCar(carPayload.toBuilder().withSentAt(this.clock.millis()).build());
     this.logger.info("Create carPayload {}", carPayload);
     return Response.ok().build();
   }
 
   @PUT
   public Response updateCar(@Valid final CarPayload carPayload) {
-    this.producerUseCase.updateCar(carPayload.toBuilder().sentAt(this.clock.millis()).build());
+    this.producerUseCase.updateCar(carPayload.toBuilder().withSentAt(this.clock.millis()).build());
     this.logger.info("Update carPayload {}", carPayload);
     return Response.ok().build();
   }
@@ -54,7 +59,7 @@ public class ProducerController {
   @Path(value = "/{id}")
   @DELETE
   public Response deleteCar(final @PathParam("id") String id) {
-    final CarPayload carPayload = CarPayload.builder().id(id).name(DELETE).sentAt(this.clock.millis()).build();
+    final CarPayload carPayload = CarPayload.builder().withId(id).withName(DELETE).withSentAt(this.clock.millis()).build();
     this.producerUseCase.deleteCar(carPayload);
     this.logger.info("Delete carPayload {}", carPayload);
     return Response.ok().build();
