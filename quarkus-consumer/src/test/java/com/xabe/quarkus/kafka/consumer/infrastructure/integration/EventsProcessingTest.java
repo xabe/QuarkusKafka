@@ -1,5 +1,11 @@
 package com.xabe.quarkus.kafka.consumer.infrastructure.integration;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.notNullValue;
+
 import com.xabe.avro.v1.Car;
 import com.xabe.avro.v1.CarCreated;
 import com.xabe.avro.v1.CarDeleted;
@@ -63,12 +69,15 @@ public class EventsProcessingTest {
     KafkaProducer.send(messageEnvelope, () -> id);
 
     Awaitility.await().pollDelay(DELAY_MS, TimeUnit.MILLISECONDS).pollInterval(POLL_INTERVAL_MS, TimeUnit.MILLISECONDS)
-        .atMost(TIMEOUT_MS, TimeUnit.MILLISECONDS).until(() -> {
+        .atMost(TIMEOUT_MS, TimeUnit.MILLISECONDS).untilAsserted(() -> {
 
       final HttpResponse<CarPayload[]> response = Unirest.get(String.format("http://localhost:%d/api/consumer", 8008))
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).asObject(CarPayload[].class);
 
-      return response != null && (response.getStatus() >= 200 || response.getStatus() < 300) && response.getBody().length >= 1;
+      assertThat(response, is(notNullValue()));
+      assertThat(response.getStatus(), is(greaterThanOrEqualTo(200)));
+      assertThat(response.getStatus(), is(lessThan(300)));
+      assertThat(response.getBody().length, is(greaterThanOrEqualTo(1)));
     });
   }
 
@@ -92,12 +101,15 @@ public class EventsProcessingTest {
 
     //Then
     Awaitility.await().pollDelay(DELAY_MS, TimeUnit.MILLISECONDS).pollInterval(POLL_INTERVAL_MS, TimeUnit.MILLISECONDS)
-        .atMost(TIMEOUT_MS, TimeUnit.MILLISECONDS).until(() -> {
+        .atMost(TIMEOUT_MS, TimeUnit.MILLISECONDS).untilAsserted(() -> {
 
       final HttpResponse<CarPayload[]> response = Unirest.get(String.format("http://localhost:%d/api/consumer", 8008))
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).asObject(CarPayload[].class);
 
-      return response != null && (response.getStatus() >= 200 || response.getStatus() < 300) && response.getBody().length >= 1;
+      assertThat(response, is(notNullValue()));
+      assertThat(response.getStatus(), is(greaterThanOrEqualTo(200)));
+      assertThat(response.getStatus(), is(lessThan(300)));
+      assertThat(response.getBody().length, is(greaterThanOrEqualTo(1)));
     });
   }
 
@@ -119,13 +131,16 @@ public class EventsProcessingTest {
 
     //Then
     Awaitility.await().pollDelay(DELAY_MS, TimeUnit.MILLISECONDS).pollInterval(POLL_INTERVAL_MS, TimeUnit.MILLISECONDS)
-        .atMost(TIMEOUT_MS, TimeUnit.MILLISECONDS).until(() -> {
+        .atMost(TIMEOUT_MS, TimeUnit.MILLISECONDS).untilAsserted(() -> {
 
       final HttpResponse<CarPayload[]> response = Unirest.get(String.format("http://localhost:%d/api/consumer", 8008))
           .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).asObject(CarPayload[].class);
       final Optional<CarPayload> carPayload = Stream.of(response.getBody()).filter(item -> id.equalsIgnoreCase(item.getId())).findFirst();
 
-      return response != null && (response.getStatus() >= 200 || response.getStatus() < 300) && carPayload.isEmpty();
+      assertThat(response, is(notNullValue()));
+      assertThat(response.getStatus(), is(greaterThanOrEqualTo(200)));
+      assertThat(response.getStatus(), is(lessThan(300)));
+      assertThat(carPayload.isEmpty(), is(true));
     });
   }
 
