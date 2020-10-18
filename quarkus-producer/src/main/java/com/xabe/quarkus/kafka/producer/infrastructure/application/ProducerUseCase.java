@@ -1,6 +1,6 @@
 package com.xabe.quarkus.kafka.producer.infrastructure.application;
 
-import com.xabe.quarkus.kafka.producer.infrastructure.persentation.payload.CarPayload;
+import com.xabe.quarkus.kafka.producer.infrastructure.presentation.payload.CarPayload;
 
 public interface ProducerUseCase {
 

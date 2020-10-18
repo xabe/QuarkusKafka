@@ -1,4 +1,4 @@
-package com.xabe.quarkus.kafka.producer.infrastructure.persentation;
+package com.xabe.quarkus.kafka.producer.infrastructure.presentation;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -9,7 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.xabe.quarkus.kafka.producer.infrastructure.application.ProducerUseCase;
-import com.xabe.quarkus.kafka.producer.infrastructure.persentation.payload.CarPayload;
+import com.xabe.quarkus.kafka.producer.infrastructure.presentation.payload.CarPayload;
 import java.time.Clock;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -40,7 +40,7 @@ class ProducerControllerTest {
 
     assertThat(result, is(notNullValue()));
     assertThat(result.getStatusInfo(), is(Status.OK));
-    verify(this.producerUseCase).createCar(eq(carPayload.toBuilder().sentAt(1L).build()));
+    verify(this.producerUseCase).createCar(eq(carPayload.toBuilder().withSentAt(1L).build()));
   }
 
   @Test
@@ -51,7 +51,7 @@ class ProducerControllerTest {
 
     assertThat(result, is(notNullValue()));
     assertThat(result.getStatusInfo(), is(Status.OK));
-    verify(this.producerUseCase).updateCar(eq(carPayload.toBuilder().sentAt(1L).build()));
+    verify(this.producerUseCase).updateCar(eq(carPayload.toBuilder().withSentAt(1L).build()));
   }
 
   @Test
@@ -62,7 +62,7 @@ class ProducerControllerTest {
 
     assertThat(result, is(notNullValue()));
     assertThat(result.getStatusInfo(), is(Status.OK));
-    verify(this.producerUseCase).deleteCar(eq(CarPayload.builder().id(id).name(ProducerController.DELETE).sentAt(1L).build()));
+    verify(this.producerUseCase).deleteCar(eq(CarPayload.builder().withId(id).withName(ProducerController.DELETE).withSentAt(1L).build()));
   }
 
 }

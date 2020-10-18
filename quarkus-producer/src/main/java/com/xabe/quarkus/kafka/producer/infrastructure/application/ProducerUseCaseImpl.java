@@ -2,7 +2,7 @@ package com.xabe.quarkus.kafka.producer.infrastructure.application;
 
 import com.xabe.quarkus.kafka.producer.domain.entity.CarDO;
 import com.xabe.quarkus.kafka.producer.domain.repository.ProducerRepository;
-import com.xabe.quarkus.kafka.producer.infrastructure.persentation.payload.CarPayload;
+import com.xabe.quarkus.kafka.producer.infrastructure.presentation.payload.CarPayload;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.slf4j.Logger;

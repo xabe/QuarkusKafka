@@ -1,4 +1,4 @@
-package com.xabe.quarkus.kafka.producer.infrastructure.persentation;
+package com.xabe.quarkus.kafka.producer.infrastructure.presentation;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

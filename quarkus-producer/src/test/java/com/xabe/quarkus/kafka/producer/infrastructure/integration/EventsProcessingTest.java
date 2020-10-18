@@ -8,7 +8,7 @@ import com.xabe.avro.v1.CarCreated;
 import com.xabe.avro.v1.CarDeleted;
 import com.xabe.avro.v1.CarUpdated;
 import com.xabe.avro.v1.MessageEnvelope;
-import com.xabe.quarkus.kafka.producer.infrastructure.persentation.payload.CarPayload;
+import com.xabe.quarkus.kafka.producer.infrastructure.presentation.payload.CarPayload;
 import groovy.lang.Tuple2;
 import io.quarkus.test.junit.QuarkusTest;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class EventsProcessingTest {
 
   @Test
   public void shouldCreatedCar() throws Exception {
-    final CarPayload carPayload = CarPayload.builder().id("id").name("mazda 3").build();
+    final CarPayload carPayload = CarPayload.builder().withId("id").withName("mazda 3").build();
 
     final HttpResponse<JsonNode> response = Unirest.post(String.format("http://localhost:%d/api/producer/car", this.serverPort))
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).body(carPayload).asJson();
@@ -70,7 +70,7 @@ public class EventsProcessingTest {
 
   @Test
   public void shouldUpdateCar() throws Exception {
-    final CarPayload carPayload = CarPayload.builder().id("id").name("mazda 5").build();
+    final CarPayload carPayload = CarPayload.builder().withId("id").withName("mazda 5").build();
 
     final HttpResponse<JsonNode> response = Unirest.put(String.format("http://localhost:%d/api/producer/car", this.serverPort))
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).body(carPayload).asJson();

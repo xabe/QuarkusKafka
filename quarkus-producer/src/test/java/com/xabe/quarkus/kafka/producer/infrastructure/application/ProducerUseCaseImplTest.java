@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import com.xabe.quarkus.kafka.producer.domain.entity.CarDO;
 import com.xabe.quarkus.kafka.producer.domain.repository.ProducerRepository;
-import com.xabe.quarkus.kafka.producer.infrastructure.persentation.payload.CarPayload;
+import com.xabe.quarkus.kafka.producer.infrastructure.presentation.payload.CarPayload;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ class ProducerUseCaseImplTest {
 
   @Test
   public void shouldSaveCar() throws Exception {
-    final CarPayload carPayload = CarPayload.builder().name("name").id("id").sentAt(5L).build();
+    final CarPayload carPayload = CarPayload.builder().withName("name").withId("id").withSentAt(5L).build();
 
     this.producerUseCase.createCar(carPayload);
 
@@ -33,7 +33,7 @@ class ProducerUseCaseImplTest {
 
   @Test
   public void shouldUpdateCar() throws Exception {
-    final CarPayload carPayload = CarPayload.builder().name("name").id("id").sentAt(5L).build();
+    final CarPayload carPayload = CarPayload.builder().withName("name").withId("id").withSentAt(5L).build();
 
     this.producerUseCase.updateCar(carPayload);
 
@@ -42,7 +42,7 @@ class ProducerUseCaseImplTest {
 
   @Test
   public void shouldDeleteCar() throws Exception {
-    final CarPayload carPayload = CarPayload.builder().name("name").id("id").sentAt(5L).build();
+    final CarPayload carPayload = CarPayload.builder().withName("name").withId("id").withSentAt(5L).build();
 
     this.producerUseCase.deleteCar(carPayload);
 

@@ -16,14 +16,13 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.logging.Logger;
 
 public class KafkaConsumer {
 
   private static final BlockingQueue<Tuple2<String, MessageEnvelope>> MESSAGE_KAFKA = new ArrayBlockingQueue<>(100);
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
+  private static final Logger LOGGER = Logger.getLogger(KafkaConsumer.class);
 
   private static Consumer consumer;
 
@@ -91,8 +90,8 @@ public class KafkaConsumer {
 
           for (final ConsumerRecord<String, MessageEnvelope> record : records) {
             try {
-              LOGGER.info("Received event {}", record);
               MESSAGE_KAFKA.put(Tuple2.tuple(record.key(), record.value()));
+              LOGGER.infof("Received event key: {%s} message:{%s}", record.key(), record.value());
             } catch (final Exception e) {
 
             }
