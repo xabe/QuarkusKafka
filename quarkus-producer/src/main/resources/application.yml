@@ -9,8 +9,6 @@ quarkus:
       - "-H:+ReportExceptionStackTraces"
       - "-H:GenerateDebugInfo=1"
       - "-H:+StackTrace"
-      - "-H:ResourceConfigurationFiles=resources-config.json"
-      - "-H:ReflectionConfigurationFiles=reflection-config.json"
   package:
     main-class: com.xabe.quarkus.kafka.producer.App
   log:

@@ -77,7 +77,6 @@
                 <import>${project.basedir}/src/main/resources/event/imports</import>
               </imports>
               <stringType>${avro.stringType}</stringType>
-              <templateDirectory>${project.basedir}/src/main/resources/avro/templates/</templateDirectory>
             </configuration>
           </execution>
         </executions>
