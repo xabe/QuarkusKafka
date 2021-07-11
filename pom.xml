@@ -19,15 +19,14 @@
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus-plugin.version>1.9.0.Final</quarkus-plugin.version>
+    <quarkus-plugin.version>2.0.1.Final</quarkus-plugin.version>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-    <quarkus.platform.version>1.9.0.Final</quarkus.platform.version>
+    <quarkus.platform.version>2.0.1.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <avro.version>1.10.0</avro.version>
     <avro.confluent.version>5.5.1</avro.confluent.version>
     <schema-registry.plugin.version>5.5.1</schema-registry.plugin.version>
-    <mockito.version>3.5.9</mockito.version>
     <commons-compress.version>1.20</commons-compress.version>
   </properties>
   <dependencyManagement>
@@ -129,7 +128,6 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -161,23 +159,23 @@
 
   <repositories>
     <repository>
-      <id>confluent</id>
-      <url>http://packages.confluent.io/maven/</url>
-    </repository>
-    <repository>
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
+    </repository>
+    <repository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
     </repository>
   </repositories>
 
   <pluginRepositories>
     <pluginRepository>
-      <id>confluent</id>
-      <url>http://packages.confluent.io/maven/</url>
-    </pluginRepository>
-    <pluginRepository>
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
     </pluginRepository>
   </pluginRepositories>
 
@@ -186,17 +184,35 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compiler-plugin.version}</version>
+        <configuration>
+          <parameters>${maven.compiler.parameters}</parameters>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
         <configuration>
+          <excludedGroups>integration</excludedGroups>
           <systemPropertyVariables>
             <quarkus.test.profile>test</quarkus.test.profile>
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
             <maven.home>${maven.home}</maven.home>
           </systemPropertyVariables>
         </configuration>
+        <executions>
+          <execution>
+            <id>integration-tests</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <excludedGroups>!integration</excludedGroups>
+              <groups>integration</groups>
+              <systemPropertyVariables/>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

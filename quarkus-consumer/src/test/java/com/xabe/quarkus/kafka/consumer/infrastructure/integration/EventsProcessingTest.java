@@ -26,9 +26,11 @@ import org.apache.commons.io.IOUtils;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
+@Tag("integration")
 public class EventsProcessingTest {
 
   public static final int TIMEOUT_MS = 5000;

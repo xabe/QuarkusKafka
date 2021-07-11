@@ -1,30 +1,67 @@
-# quarkus-kafka project
+## Quarkus with kafka
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+En este ejemplo vemos como usar quarkus con kafka y avro, lo primero es arranca los containers de:
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+- kafka
+- zookeeper
+- schema registry
 
-## Running the application in dev mode
+Solo tenemos que lanzar el siguiente comando para arrancar todos los contenedores:
 
-You can run your application in dev mode that enables live coding using:
+```shell script
+docker-compose up -d
 ```
-./mvnw quarkus:dev
+
+Lo siguiente es generar los binarios de productor y consumidor
+
+```shell script
+mvn clean install
 ```
 
-## Packaging and running the application
+Una vez generado los binarios podemos atacar el api del productor:
 
-The application can be packaged using `./mvnw package`.
-It produces the `quarkus-kafka-1.0.0-SNAPSHOT-runner.jar` file in the `/target` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/lib` directory.
 
-The application is now runnable using `java -jar target/quarkus-kafka-1.0.0-SNAPSHOT-runner.jar`.
+> ### Api productor
+>
+> - Crear un coche
+>
+>```shell script
+>curl --request POST \
+>  --url http://localhost:8009/api/producer/car \
+>  --header 'content-type: application/json' \
+>  --data '{
+>	"id" : "mazda",
+>	"name": "mazda"
+>}'
+>```
+>
+> - Actualizar un coche
+>
+>```shell script
+>curl --request PUT \
+>  --url http://localhost:8009/api/producer/car \
+>  --header 'content-type: application/json' \
+>  --data '{
+>	"id" : "mazda",
+>	"name": "mazda3"
+>}'
+>```
+>
+> - Borrar un coche
+>
+>```shell script
+>curl --request DELETE \
+>  --url http://localhost:8009/api/producer/car/mazda \
+>  --header 'content-type: application/json'
+>```
 
-## Creating a native executable
+-------
 
-You can create a native executable using: `./mvnw package -Pnative`.
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: `./mvnw package -Pnative -Dquarkus.native.container-build=true`.
-
-You can then execute your native executable with: `./target/quarkus-kafka-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image.
+> ### Api consumidor
+>
+> - Obtener todos los coches
+>
+>```shell script
+>curl --request GET \
+>  --url http://localhost:8008/api/consumer
+>```

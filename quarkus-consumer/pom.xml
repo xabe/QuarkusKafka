@@ -84,6 +84,11 @@
                     </java.util.logging.manager>
                     <maven.home>${maven.home}</maven.home>
                   </systemPropertyVariables>
+                  <includes>
+                    <include>**/*IT.java</include>
+                    <include>**/it/**/*.java</include>
+                    <include>**/integrationTest/**/*.java</include>
+                  </includes>
                 </configuration>
               </execution>
             </executions>

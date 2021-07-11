@@ -19,8 +19,6 @@ import io.smallrye.reactive.messaging.kafka.commit.KafkaCommitHandler;
 import io.smallrye.reactive.messaging.kafka.commit.KafkaIgnoreCommit;
 import io.smallrye.reactive.messaging.kafka.fault.KafkaFailureHandler;
 import io.smallrye.reactive.messaging.kafka.fault.KafkaIgnoreFailure;
-import io.vertx.kafka.client.consumer.impl.KafkaConsumerRecordImpl;
-import io.vertx.mutiny.kafka.client.consumer.KafkaConsumerRecord;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -49,12 +47,11 @@ class CarProcessorTest {
     final CarCreated carCreated = CarCreated.newBuilder().setSentAt(System.currentTimeMillis()).setCar(car).build();
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData()).setPayload(carCreated)
         .build();
-    final ConsumerRecord consumerRecord = new ConsumerRecord("topic", 1, 1L, "key", messageEnvelope);
-    final KafkaConsumerRecord kafkaConsumerRecord = KafkaConsumerRecord.newInstance(new KafkaConsumerRecordImpl(consumerRecord));
+    final ConsumerRecord<String, MessageEnvelope> consumerRecord = new ConsumerRecord<>("topic", 1, 1L, "key", messageEnvelope);
     final KafkaCommitHandler kafkaCommitHandler = new KafkaIgnoreCommit();
     final KafkaFailureHandler kafkaFailureHandler = new KafkaIgnoreFailure("channel");
-    final IncomingKafkaRecord incomingKafkaRecord =
-        new IncomingKafkaRecord<>(kafkaConsumerRecord, kafkaCommitHandler, kafkaFailureHandler, false, false);
+    final IncomingKafkaRecord<String, MessageEnvelope> incomingKafkaRecord =
+        new IncomingKafkaRecord<>(consumerRecord, kafkaCommitHandler, kafkaFailureHandler, false, false);
 
     final CompletionStage result = this.carProcessor.consumeKafka(incomingKafkaRecord);
 
@@ -70,12 +67,11 @@ class CarProcessorTest {
     final CarUpdated carUpdated = CarUpdated.newBuilder().setSentAt(System.currentTimeMillis()).setCar(car).setCarBeforeUpdate(car).build();
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData()).setPayload(carUpdated)
         .build();
-    final ConsumerRecord consumerRecord = new ConsumerRecord("topic", 1, 1L, "key", messageEnvelope);
-    final KafkaConsumerRecord kafkaConsumerRecord = KafkaConsumerRecord.newInstance(new KafkaConsumerRecordImpl(consumerRecord));
+    final ConsumerRecord<String, MessageEnvelope> consumerRecord = new ConsumerRecord<>("topic", 1, 1L, "key", messageEnvelope);
     final KafkaCommitHandler kafkaCommitHandler = new KafkaIgnoreCommit();
     final KafkaFailureHandler kafkaFailureHandler = new KafkaIgnoreFailure("channel");
-    final IncomingKafkaRecord incomingKafkaRecord =
-        new IncomingKafkaRecord<>(kafkaConsumerRecord, kafkaCommitHandler, kafkaFailureHandler, false, false);
+    final IncomingKafkaRecord<String, MessageEnvelope> incomingKafkaRecord =
+        new IncomingKafkaRecord<>(consumerRecord, kafkaCommitHandler, kafkaFailureHandler, false, false);
 
     final CompletionStage result = this.carProcessor.consumeKafka(incomingKafkaRecord);
 
