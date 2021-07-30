@@ -2,9 +2,13 @@
 # key = value
 
 quarkus:
+  test:
+    native-image-profile: test
+    native-image-wait-time: 300
+  vertx:
+    prefer-native-transport: true
   native:
     additional-build-args:
-      - "-H:-ParseRuntimeOptions"
       - "-H:+PrintClassInitialization"
       - "-H:+ReportExceptionStackTraces"
       - "-H:GenerateDebugInfo=1"
