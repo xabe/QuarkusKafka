@@ -13,7 +13,7 @@ import com.xabe.avro.v1.CarUpdated;
 import com.xabe.avro.v1.MessageEnvelope;
 import com.xabe.quarkus.kafka.producer.domain.entity.CarDO;
 import com.xabe.quarkus.kafka.producer.domain.repository.ProducerRepository;
-import io.smallrye.reactive.messaging.kafka.OutgoingKafkaRecordMetadata;
+import io.smallrye.reactive.messaging.kafka.api.OutgoingKafkaRecordMetadata;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -40,7 +40,7 @@ class ProducerRepositoryImplTest {
 
   @Test
   public void givenACarDOWhenInvokeSaveCarThenSendEvent() throws Exception {
-    final CarDO carDO = CarDO.builder().id("id").name("name").sentAt(1L).build();
+    final CarDO carDO = CarDO.builder().id("id").name("name").sentAt(Instant.now()).build();
     final ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
 
     when(this.clock.getZone()).thenReturn(ZoneId.systemDefault());
@@ -56,7 +56,7 @@ class ProducerRepositoryImplTest {
     this.assertMetadata(messageEnvelope, "create");
     final CarCreated carCreated = CarCreated.class.cast(messageEnvelope.getPayload());
     assertThat(carCreated, is(notNullValue()));
-    assertThat(carCreated.getSentAt(), is(1L));
+    assertThat(carCreated.getSentAt(), is(notNullValue()));
     assertThat(carCreated.getCar().getId(), is("id"));
     assertThat(carCreated.getCar().getName(), is("name"));
     assertThat(result.getMetadata(OutgoingKafkaRecordMetadata.class).isPresent(), is(true));
@@ -65,7 +65,7 @@ class ProducerRepositoryImplTest {
 
   @Test
   public void givenACarDOWhenInvokeUpdateCarThenSendEvent() throws Exception {
-    final CarDO carDO = CarDO.builder().id("id").name("name").sentAt(1L).build();
+    final CarDO carDO = CarDO.builder().id("id").name("name").sentAt(Instant.now()).build();
     final ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
 
     when(this.clock.getZone()).thenReturn(ZoneId.systemDefault());
@@ -81,7 +81,7 @@ class ProducerRepositoryImplTest {
     this.assertMetadata(messageEnvelope, "update");
     final CarUpdated carUpdated = CarUpdated.class.cast(messageEnvelope.getPayload());
     assertThat(carUpdated, is(notNullValue()));
-    assertThat(carUpdated.getSentAt(), is(1L));
+    assertThat(carUpdated.getSentAt(), is(notNullValue()));
     assertThat(carUpdated.getCar().getId(), is("id"));
     assertThat(carUpdated.getCar().getName(), is("name"));
     assertThat(result.getMetadata(OutgoingKafkaRecordMetadata.class).isPresent(), is(true));
@@ -90,7 +90,7 @@ class ProducerRepositoryImplTest {
 
   @Test
   public void givenACarDOWhenInvokeDeleteCarThenSendEvent() throws Exception {
-    final CarDO carDO = CarDO.builder().id("id").name("name").sentAt(1L).build();
+    final CarDO carDO = CarDO.builder().id("id").name("name").sentAt(Instant.now()).build();
     final ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
 
     when(this.clock.getZone()).thenReturn(ZoneId.systemDefault());
@@ -106,7 +106,7 @@ class ProducerRepositoryImplTest {
     this.assertMetadata(messageEnvelope, "delete");
     final CarDeleted carDeleted = CarDeleted.class.cast(messageEnvelope.getPayload());
     assertThat(carDeleted, is(notNullValue()));
-    assertThat(carDeleted.getSentAt(), is(1L));
+    assertThat(carDeleted.getSentAt(), is(notNullValue()));
     assertThat(carDeleted.getCar().getId(), is("id"));
     assertThat(carDeleted.getCar().getName(), is("name"));
     assertThat(result.getMetadata(OutgoingKafkaRecordMetadata.class).isPresent(), is(true));

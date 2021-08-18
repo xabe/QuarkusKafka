@@ -45,7 +45,7 @@ public class KafkaProducer {
     );
     PRODUCER.send(producerRecord, (metadata, exception) -> {
       if (exception == null) {
-        System.out.println(metadata);
+        System.out.println("Send Event :" + metadata.toString());
       } else {
         exception.printStackTrace();
       }

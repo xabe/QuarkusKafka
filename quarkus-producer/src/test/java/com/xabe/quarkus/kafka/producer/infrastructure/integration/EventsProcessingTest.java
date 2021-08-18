@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import com.fatboyindustrial.gsonjavatime.Converters;
+import com.google.gson.GsonBuilder;
 import com.xabe.avro.v1.CarCreated;
 import com.xabe.avro.v1.CarDeleted;
 import com.xabe.avro.v1.CarUpdated;
@@ -19,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
+import kong.unirest.gson.GsonObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,6 +39,7 @@ public class EventsProcessingTest {
 
   @BeforeAll
   public static void init() throws IOException, InterruptedException {
+    Unirest.config().setObjectMapper(new GsonObjectMapper(Converters.registerAll(new GsonBuilder()).create()));
     final InputStream car = EventsProcessingTest.class.getClassLoader().getResourceAsStream("avro-car.json");
     Unirest.post(UrlUtil.getInstance().getSchemaRegistryCar()).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         .body(IOUtils.toString(car, StandardCharsets.UTF_8)).asJson();

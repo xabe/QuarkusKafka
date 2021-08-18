@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import com.xabe.quarkus.kafka.producer.infrastructure.application.ProducerUseCase;
 import com.xabe.quarkus.kafka.producer.infrastructure.presentation.payload.CarPayload;
 import java.time.Clock;
+import java.time.Instant;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,16 +21,17 @@ class ProducerControllerTest {
 
   private ProducerUseCase producerUseCase;
 
-  private Clock clock;
+  private Instant now;
 
   private ProducerController producerController;
 
   @BeforeEach
   public void setUp() throws Exception {
     this.producerUseCase = mock(ProducerUseCase.class);
-    this.clock = mock(Clock.class);
-    when(this.clock.millis()).thenReturn(1L);
-    this.producerController = new ProducerController(this.clock, this.producerUseCase);
+    final Clock clock = mock(Clock.class);
+    this.now = Instant.now();
+    when(clock.instant()).thenReturn(this.now);
+    this.producerController = new ProducerController(clock, this.producerUseCase);
   }
 
   @Test
@@ -40,7 +42,7 @@ class ProducerControllerTest {
 
     assertThat(result, is(notNullValue()));
     assertThat(result.getStatusInfo(), is(Status.OK));
-    verify(this.producerUseCase).createCar(eq(carPayload.toBuilder().withSentAt(1L).build()));
+    verify(this.producerUseCase).createCar(eq(carPayload.toBuilder().withSentAt(this.now).build()));
   }
 
   @Test
@@ -51,7 +53,7 @@ class ProducerControllerTest {
 
     assertThat(result, is(notNullValue()));
     assertThat(result.getStatusInfo(), is(Status.OK));
-    verify(this.producerUseCase).updateCar(eq(carPayload.toBuilder().withSentAt(1L).build()));
+    verify(this.producerUseCase).updateCar(eq(carPayload.toBuilder().withSentAt(this.now).build()));
   }
 
   @Test
@@ -62,7 +64,8 @@ class ProducerControllerTest {
 
     assertThat(result, is(notNullValue()));
     assertThat(result.getStatusInfo(), is(Status.OK));
-    verify(this.producerUseCase).deleteCar(eq(CarPayload.builder().withId(id).withName(ProducerController.DELETE).withSentAt(1L).build()));
+    verify(this.producerUseCase).deleteCar(
+        eq(CarPayload.builder().withId(id).withName(ProducerController.DELETE).withSentAt(this.now).build()));
   }
 
 }

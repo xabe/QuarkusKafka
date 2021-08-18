@@ -5,26 +5,19 @@ import io.smallrye.reactive.messaging.kafka.IncomingKafkaRecord;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import lombok.RequiredArgsConstructor;
 import org.apache.avro.specific.SpecificRecord;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Metadata;
 import org.jboss.logging.Logger;
 
 @ApplicationScoped
+@RequiredArgsConstructor
 public class CarProcessor {
 
   private final Logger logger = Logger.getLogger(CarProcessor.class);
 
-  @Inject
-  Map<Class, EventHandler> handlers;
-
-  public CarProcessor() {
-  }
-
-  CarProcessor(final Map<Class, EventHandler> handlers) {
-    this.handlers = handlers;
-  }
+  private final Map<Class, EventHandler> handlers;
 
   @Incoming("input")
   public CompletionStage<Void> consumeKafka(final IncomingKafkaRecord<String, MessageEnvelope> message) {

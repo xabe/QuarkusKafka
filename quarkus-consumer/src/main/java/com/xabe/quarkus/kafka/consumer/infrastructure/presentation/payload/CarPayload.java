@@ -1,5 +1,6 @@
 package com.xabe.quarkus.kafka.consumer.infrastructure.presentation.payload;
 
+import java.time.Instant;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,10 +19,10 @@ import lombok.Value;
 public class CarPayload {
 
   @NotNull
-  private final String id;
+  String id;
 
   @NotNull
-  private final String name;
+  String name;
 
-  private final Long sentAt;
+  Instant sentAt;
 }

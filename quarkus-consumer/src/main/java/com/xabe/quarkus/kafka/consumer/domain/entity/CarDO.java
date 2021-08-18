@@ -1,6 +1,13 @@
 package com.xabe.quarkus.kafka.consumer.domain.entity;
 
-import lombok.*;
+import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.Value;
 
 @Value
 @Builder(toBuilder = true)
@@ -10,10 +17,10 @@ import lombok.*;
 @AllArgsConstructor
 public class CarDO implements DO {
 
-  private final String id;
+  String id;
 
-  private final String name;
+  String name;
 
-  private final Long sentAt;
+  Instant sentAt;
 
 }

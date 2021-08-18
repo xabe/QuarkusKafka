@@ -8,18 +8,19 @@ import com.xabe.avro.v1.MessageEnvelope;
 import com.xabe.avro.v1.Metadata;
 import com.xabe.quarkus.kafka.producer.domain.entity.CarDO;
 import com.xabe.quarkus.kafka.producer.domain.repository.ProducerRepository;
-import io.smallrye.reactive.messaging.kafka.OutgoingKafkaRecordMetadata;
+import io.smallrye.reactive.messaging.kafka.api.OutgoingKafkaRecordMetadata;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import lombok.RequiredArgsConstructor;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.jboss.logging.Logger;
 
 @ApplicationScoped
+@RequiredArgsConstructor
 public class ProducerRepositoryImpl implements ProducerRepository {
 
   public static final String V_TEST = "vTest";
@@ -28,21 +29,10 @@ public class ProducerRepositoryImpl implements ProducerRepository {
 
   private final Logger logger = Logger.getLogger(ProducerRepositoryImpl.class);
 
-  @Inject
-  Clock clock;
+  private final Clock clock;
 
-  @Inject
   @Channel("output")
-  Emitter<MessageEnvelope> kafkaEmitter;
-
-  public ProducerRepositoryImpl() {
-  }
-
-  ProducerRepositoryImpl(final Clock clock,
-      final Emitter<MessageEnvelope> kafkaEmitter) {
-    this.clock = clock;
-    this.kafkaEmitter = kafkaEmitter;
-  }
+  private final Emitter<MessageEnvelope> kafkaEmitter;
 
   @Override
   public void saveCar(final CarDO carDO) {

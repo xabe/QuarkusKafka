@@ -4,36 +4,81 @@
     "namespace": "com.xabe.avro.v1",
     "type": "record",
     "fields": [
-      {"name": "id", "type": "string"},
-      {"name": "name", "type": "string"}
+      {
+        "name": "id",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      }
     ]
   },
   {
-      "name": "CarCreated",
-      "namespace": "com.xabe.avro.v1",
-      "type": "record",
-      "fields": [
-        {"name": "car", "type": "Car"},
-       {"name": "sent_at", "type": "long", "logicalType": "timestamp-micros"}
-      ]
-    },
-    {
-      "name": "CarDeleted",
-      "namespace": "com.xabe.avro.v1",
-      "type": "record",
-      "fields": [
-        {"name": "car", "type": "Car"},
-        {"name": "sent_at", "type": "long", "logicalType": "timestamp-micros"}
-      ]
-    },
-    {
-      "name": "CarUpdated",
-      "namespace": "com.xabe.avro.v1",
-      "type": "record",
-      "fields": [
-        {"name": "car", "type": "Car"},
-        {"name": "car_before_update", "type": "Car"},
-        {"name": "sent_at", "type": "long", "logicalType": "timestamp-micros"}
-      ]
-    }
+    "name": "CarCreated",
+    "namespace": "com.xabe.avro.v1",
+    "type": "record",
+    "fields": [
+      {
+        "name": "car",
+        "type": "Car"
+      },
+      {
+        "name": "sent_at",
+        "type": [
+          "null",
+          {
+            "type": "long",
+            "logicalType": "timestamp-millis"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "CarDeleted",
+    "namespace": "com.xabe.avro.v1",
+    "type": "record",
+    "fields": [
+      {
+        "name": "car",
+        "type": "Car"
+      },
+      {
+        "name": "sent_at",
+        "type": [
+          "null",
+          {
+            "type": "long",
+            "logicalType": "timestamp-millis"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "CarUpdated",
+    "namespace": "com.xabe.avro.v1",
+    "type": "record",
+    "fields": [
+      {
+        "name": "car",
+        "type": "Car"
+      },
+      {
+        "name": "car_before_update",
+        "type": "Car"
+      },
+      {
+        "name": "sent_at",
+        "type": [
+          "null",
+          {
+            "type": "long",
+            "logicalType": "timestamp-millis"
+          }
+        ]
+      }
+    ]
+  }
 ]

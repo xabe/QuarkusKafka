@@ -4,24 +4,17 @@ import com.xabe.quarkus.kafka.producer.domain.entity.CarDO;
 import com.xabe.quarkus.kafka.producer.domain.repository.ProducerRepository;
 import com.xabe.quarkus.kafka.producer.infrastructure.presentation.payload.CarPayload;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
+@RequiredArgsConstructor
 public class ProducerUseCaseImpl implements ProducerUseCase {
 
   private final Logger logger = LoggerFactory.getLogger(ProducerUseCaseImpl.class);
 
-  @Inject
-  ProducerRepository producerRepository;
-
-  public ProducerUseCaseImpl() {
-  }
-
-  ProducerUseCaseImpl(final ProducerRepository producerRepository) {
-    this.producerRepository = producerRepository;
-  }
+  private final ProducerRepository producerRepository;
 
   @Override
   public void createCar(final CarPayload carPayload) {

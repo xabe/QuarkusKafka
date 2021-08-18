@@ -19,6 +19,7 @@ import io.smallrye.reactive.messaging.kafka.commit.KafkaCommitHandler;
 import io.smallrye.reactive.messaging.kafka.commit.KafkaIgnoreCommit;
 import io.smallrye.reactive.messaging.kafka.fault.KafkaFailureHandler;
 import io.smallrye.reactive.messaging.kafka.fault.KafkaIgnoreFailure;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -43,8 +44,9 @@ class CarProcessorTest {
   @Test
   @DisplayName("Should handler event")
   public void shouldHandlerEvent() throws Exception {
+    final Instant now = Instant.now();
     final Car car = Car.newBuilder().setId("id").setName("name").build();
-    final CarCreated carCreated = CarCreated.newBuilder().setSentAt(System.currentTimeMillis()).setCar(car).build();
+    final CarCreated carCreated = CarCreated.newBuilder().setSentAt(now).setCar(car).build();
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData()).setPayload(carCreated)
         .build();
     final ConsumerRecord<String, MessageEnvelope> consumerRecord = new ConsumerRecord<>("topic", 1, 1L, "key", messageEnvelope);
@@ -63,8 +65,9 @@ class CarProcessorTest {
   @Test
   @DisplayName("Not should handler event")
   public void notShouldHandlerEvent() throws Exception {
+    final Instant now = Instant.now();
     final Car car = Car.newBuilder().setId("id").setName("name").build();
-    final CarUpdated carUpdated = CarUpdated.newBuilder().setSentAt(System.currentTimeMillis()).setCar(car).setCarBeforeUpdate(car).build();
+    final CarUpdated carUpdated = CarUpdated.newBuilder().setSentAt(now).setCar(car).setCarBeforeUpdate(car).build();
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData()).setPayload(carUpdated)
         .build();
     final ConsumerRecord<String, MessageEnvelope> consumerRecord = new ConsumerRecord<>("topic", 1, 1L, "key", messageEnvelope);
