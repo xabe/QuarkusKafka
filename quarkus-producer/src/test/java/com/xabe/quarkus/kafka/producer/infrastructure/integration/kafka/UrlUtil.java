@@ -1,4 +1,4 @@
-package com.xabe.quarkus.kafka.producer.infrastructure.integration;
+package com.xabe.quarkus.kafka.producer.infrastructure.integration.kafka;
 
 import static java.lang.String.format;
 

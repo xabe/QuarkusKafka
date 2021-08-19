@@ -1,4 +1,4 @@
-package com.xabe.quarkus.kafka.consumer.infrastructure.integration;
+package com.xabe.quarkus.kafka.consumer.infrastructure.integration.kafka;
 
 import com.xabe.avro.v1.MessageEnvelope;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
@@ -7,12 +7,16 @@ import java.util.function.Supplier;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KafkaProducer {
 
-  private static Producer<String, MessageEnvelope> PRODUCER;
+  private static final Logger LOGGER = LoggerFactory.getLogger(KafkaProducer.class);
 
-  public static void create() {
+  private final Producer<String, MessageEnvelope> producer;
+
+  public KafkaProducer() {
     final Properties properties = new Properties();
     // normal producer
     properties.setProperty("bootstrap.servers", "127.0.0.1:9092");
@@ -36,24 +40,24 @@ public class KafkaProducer {
     properties.setProperty("use.latest.version", "true");
     properties.setProperty("auto.register.schemas", "false");
 
-    PRODUCER = new org.apache.kafka.clients.producer.KafkaProducer(properties);
+    this.producer = new org.apache.kafka.clients.producer.KafkaProducer(properties);
   }
 
-  public static void send(final MessageEnvelope messageEnvelope, final Supplier<String> getKey) {
+  public void send(final MessageEnvelope messageEnvelope, final Supplier<String> getKey) {
     final ProducerRecord<String, MessageEnvelope> producerRecord = new ProducerRecord<>(
         "car.v1", getKey.get(), messageEnvelope
     );
-    PRODUCER.send(producerRecord, (metadata, exception) -> {
+    this.producer.send(producerRecord, (metadata, exception) -> {
       if (exception == null) {
-        System.out.println("Send Event :" + metadata.toString());
+        LOGGER.info("Send event : {}", metadata);
       } else {
-        exception.printStackTrace();
+        LOGGER.error("Error send event : {}", exception.getMessage(), exception);
       }
     });
-    PRODUCER.flush();
+    this.producer.flush();
   }
 
-  public static void close() {
-    PRODUCER.close();
+  public void close() {
+    this.producer.close();
   }
 }

@@ -8,6 +8,8 @@ import com.xabe.avro.v1.CarDeleted;
 import com.xabe.avro.v1.CarUpdated;
 import com.xabe.avro.v1.MessageEnvelope;
 import com.xabe.avro.v1.Metadata;
+import com.xabe.quarkus.kafka.consumer.infrastructure.integration.kafka.KafkaProducer;
+import com.xabe.quarkus.kafka.consumer.infrastructure.integration.kafka.UrlUtil;
 import com.xabe.quarkus.kafka.consumer.infrastructure.presentation.payload.CarPayload;
 import io.quarkus.test.junit.QuarkusTest;
 import java.io.IOException;
@@ -42,6 +44,8 @@ public class EventsProcessingTest {
 
   public static final int POLL_INTERVAL_MS = 500;
 
+  private static final KafkaProducer KAFKA_PRODUCER = new KafkaProducer();
+
   @BeforeAll
   public static void init() throws IOException {
     Unirest.config().setObjectMapper(new GsonObjectMapper(Converters.registerAll(new GsonBuilder()).create()));
@@ -50,12 +54,11 @@ public class EventsProcessingTest {
         .body(IOUtils.toString(car, StandardCharsets.UTF_8)).asJson();
     Unirest.put(UrlUtil.getInstance().getSchemaRegistryCompatibilityCar()).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         .body("{\"compatibility\":\"Forward\"}").asJson();
-    KafkaProducer.create();
   }
 
   @AfterAll
   public static void end() {
-    KafkaProducer.close();
+    KAFKA_PRODUCER.close();
   }
 
   @Test
@@ -66,7 +69,7 @@ public class EventsProcessingTest {
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData()).setPayload(carCreated)
         .build();
 
-    KafkaProducer.send(messageEnvelope, () -> id);
+    KAFKA_PRODUCER.send(messageEnvelope, () -> id);
 
     Awaitility.await().pollDelay(DELAY_MS, TimeUnit.MILLISECONDS).pollInterval(POLL_INTERVAL_MS, TimeUnit.MILLISECONDS)
         .atMost(TIMEOUT_MS, TimeUnit.MILLISECONDS).until(() -> {
@@ -86,7 +89,7 @@ public class EventsProcessingTest {
     final MessageEnvelope messageEnvelopeOld = MessageEnvelope.newBuilder().setMetadata(this.createMetaData())
         .setPayload(CarCreated.newBuilder().setSentAt(Instant.now()).setCar(carOld).build()).build();
 
-    KafkaProducer.send(messageEnvelopeOld, () -> id);
+    KAFKA_PRODUCER.send(messageEnvelopeOld, () -> id);
 
     final Car car = Car.newBuilder().setId(id).setName("mazda3").build();
     final CarUpdated carUpdated = CarUpdated.newBuilder().setSentAt(Instant.now()).setCarBeforeUpdate(carOld).setCar(car)
@@ -94,7 +97,7 @@ public class EventsProcessingTest {
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData()).setPayload(carUpdated).build();
 
     //When
-    KafkaProducer.send(messageEnvelope, () -> id);
+    KAFKA_PRODUCER.send(messageEnvelope, () -> id);
 
     //Then
     Awaitility.await().pollDelay(DELAY_MS, TimeUnit.MILLISECONDS).pollInterval(POLL_INTERVAL_MS, TimeUnit.MILLISECONDS)
@@ -115,13 +118,13 @@ public class EventsProcessingTest {
     final MessageEnvelope messageEnvelopeOld = MessageEnvelope.newBuilder().setMetadata(this.createMetaData())
         .setPayload(CarCreated.newBuilder().setSentAt(Instant.now()).setCar(car).build()).build();
 
-    KafkaProducer.send(messageEnvelopeOld, () -> id);
+    KAFKA_PRODUCER.send(messageEnvelopeOld, () -> id);
 
     final CarDeleted carDeleted = CarDeleted.newBuilder().setSentAt(Instant.now()).setCar(car).build();
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData()).setPayload(carDeleted).build();
 
     //When
-    KafkaProducer.send(messageEnvelope, () -> id);
+    KAFKA_PRODUCER.send(messageEnvelope, () -> id);
 
     //Then
     Awaitility.await().pollDelay(DELAY_MS, TimeUnit.MILLISECONDS).pollInterval(POLL_INTERVAL_MS, TimeUnit.MILLISECONDS)

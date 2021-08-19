@@ -1,4 +1,4 @@
-package com.xabe.quarkus.kafka.producer.infrastructure.integration;
+package com.xabe.quarkus.kafka.producer.infrastructure.integration.kafka;
 
 import java.io.IOException;
 import java.io.InputStream;

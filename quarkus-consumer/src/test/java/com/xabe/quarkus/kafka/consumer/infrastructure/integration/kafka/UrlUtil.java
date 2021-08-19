@@ -1,10 +1,11 @@
-package com.xabe.quarkus.kafka.consumer.infrastructure.integration;
+package com.xabe.quarkus.kafka.consumer.infrastructure.integration.kafka;
 
 import static java.lang.String.format;
 
 public final class UrlUtil {
 
   private static final String SCHEMA_REGISTRY_CAR = "http://%s:%s/subjects/car.v1-value/versions";
+
   private static final String SCHEMA_REGISTRY_COMPATIBILITY_CAR = "http://%s:%s/config/car.v1-value";
 
   private static final UrlUtil INSTANCE = new UrlUtil();
