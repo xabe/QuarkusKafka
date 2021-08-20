@@ -2,9 +2,11 @@
 # key = value
 
 quarkus:
+  kafka:
+    devservices:
+      enabled: false
   test:
     native-image-profile: test
-    native-image-wait-time: 300
   vertx:
     prefer-native-transport: true
   native:
@@ -78,4 +80,4 @@ mp:
         broadcast: false
         bootstrap:
           servers:
-            - http://localhost:9092
+            - localhost:9092

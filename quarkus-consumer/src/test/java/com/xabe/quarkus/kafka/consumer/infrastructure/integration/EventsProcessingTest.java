@@ -33,9 +33,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 @QuarkusTest
 @Tag("integration")
+@TestInstance(Lifecycle.PER_CLASS)
 public class EventsProcessingTest {
 
   public static final int TIMEOUT_MS = 5000;
@@ -44,7 +47,7 @@ public class EventsProcessingTest {
 
   public static final int POLL_INTERVAL_MS = 500;
 
-  private static final KafkaProducer KAFKA_PRODUCER = new KafkaProducer();
+  private static KafkaProducer KAFKA_PRODUCER;
 
   @BeforeAll
   public static void init() throws IOException {
@@ -54,6 +57,7 @@ public class EventsProcessingTest {
         .body(IOUtils.toString(car, StandardCharsets.UTF_8)).asJson();
     Unirest.put(UrlUtil.getInstance().getSchemaRegistryCompatibilityCar()).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         .body("{\"compatibility\":\"Forward\"}").asJson();
+    KAFKA_PRODUCER = new KafkaProducer();
   }
 
   @AfterAll

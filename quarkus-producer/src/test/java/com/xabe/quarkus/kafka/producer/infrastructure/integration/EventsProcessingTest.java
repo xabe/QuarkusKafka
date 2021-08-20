@@ -42,7 +42,7 @@ public class EventsProcessingTest {
 
   private final int serverPort = 8009;
 
-  private static final KafkaConsumer KAFKA_CONSUMER = new KafkaConsumer();
+  private static KafkaConsumer KAFKA_CONSUMER;
 
   @BeforeAll
   public static void init() throws IOException {
@@ -52,6 +52,7 @@ public class EventsProcessingTest {
         .body(IOUtils.toString(car, StandardCharsets.UTF_8)).asJson();
     Unirest.put(UrlUtil.getInstance().getSchemaRegistryCompatibilityCar()).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
         .body("{\"compatibility\":\"Forward\"}").asJson();
+    KAFKA_CONSUMER = new KafkaConsumer();
   }
 
   @AfterAll
