@@ -1,5 +1,17 @@
 package com.xabe.quarkus.kafka.consumer.infrastructure.integration;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.GsonBuilder;
 import com.xabe.avro.v1.Car;
@@ -12,16 +24,6 @@ import com.xabe.quarkus.kafka.consumer.infrastructure.integration.kafka.KafkaPro
 import com.xabe.quarkus.kafka.consumer.infrastructure.integration.kafka.UrlUtil;
 import com.xabe.quarkus.kafka.consumer.infrastructure.presentation.payload.CarPayload;
 import io.quarkus.test.junit.QuarkusTest;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import kong.unirest.HttpResponse;
@@ -31,6 +33,7 @@ import org.apache.commons.io.IOUtils;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -43,7 +46,7 @@ public class EventsProcessingTest {
 
   public static final int TIMEOUT_MS = 5000;
 
-  public static final int DELAY_MS = 1500;
+  public static final int DELAY_MS = 110;
 
   public static final int POLL_INTERVAL_MS = 500;
 
@@ -73,19 +76,20 @@ public class EventsProcessingTest {
     final MessageEnvelope messageEnvelope = MessageEnvelope.newBuilder().setMetadata(this.createMetaData()).setPayload(carCreated)
         .build();
 
-    KAFKA_PRODUCER.send(messageEnvelope, () -> id);
+    IntStream.range(0, 100).forEach(item -> KAFKA_PRODUCER.send(messageEnvelope, () -> id));
 
-    Awaitility.await().pollDelay(DELAY_MS, TimeUnit.MILLISECONDS).pollInterval(POLL_INTERVAL_MS, TimeUnit.MILLISECONDS)
-        .atMost(TIMEOUT_MS, TimeUnit.MILLISECONDS).until(() -> {
+    Awaitility.await().pollDelay(30, TimeUnit.SECONDS).pollInterval(5, TimeUnit.SECONDS)
+        .atMost(40, TimeUnit.SECONDS).until(() -> {
 
           final HttpResponse<CarPayload[]> response = Unirest.get(String.format("http://localhost:%d/api/consumer", 8008))
               .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON).asObject(CarPayload[].class);
 
-          return response != null && (response.getStatus() >= 200 || response.getStatus() < 300) && response.getBody().length >= 1;
+          return response != null && (response.getStatus() >= 200 || response.getStatus() < 300) && response.getBody().length >= 100;
         });
   }
 
   @Test
+  @Disabled
   public void shouldConsumerCarUpdate() throws Exception {
     //Given
     final String id = this.generateId();
@@ -115,6 +119,7 @@ public class EventsProcessingTest {
   }
 
   @Test
+  @Disabled
   public void shouldConsumerCarDelete() throws Exception {
     //Given
     final String id = this.generateId();

@@ -11,12 +11,12 @@ quarkus:
     prefer-native-transport: true
   native:
     additional-build-args:
-      - "-H:+PrintClassInitialization"
-      - "-H:+ReportExceptionStackTraces"
-      - "-H:GenerateDebugInfo=1"
-      - "-H:+StackTrace"
-      - "-H:ResourceConfigurationFiles=resources-config.json"
-      - "-H:ReflectionConfigurationFiles=reflection-config.json"
+    - "-H:+PrintClassInitialization"
+    - "-H:+ReportExceptionStackTraces"
+    - "-H:GenerateDebugInfo=1"
+    - "-H:+StackTrace"
+    - "-H:ResourceConfigurationFiles=resources-config.json"
+    - "-H:ReflectionConfigurationFiles=reflection-config.json"
   package:
     main-class: com.xabe.quarkus.kafka.consumer.App
   log:
@@ -29,7 +29,7 @@ quarkus:
       org.jboss.resteasy:
         level: INFO
       io.smallrye.reactive.messaging.kafka:
-        level: DEBUG
+        level: TRACE
   application:
     name: quarkus-consumer
   banner:
@@ -79,4 +79,4 @@ mp:
         partitions: 1
         bootstrap:
           servers:
-            - localhost:9092
+          - localhost:9092

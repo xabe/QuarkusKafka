@@ -9,21 +9,24 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-import com.xabe.avro.v1.Car;
-import com.xabe.avro.v1.CarCreated;
-import com.xabe.avro.v1.CarUpdated;
-import com.xabe.avro.v1.MessageEnvelope;
-import com.xabe.avro.v1.Metadata;
-import io.smallrye.reactive.messaging.kafka.IncomingKafkaRecord;
-import io.smallrye.reactive.messaging.kafka.commit.KafkaCommitHandler;
-import io.smallrye.reactive.messaging.kafka.commit.KafkaIgnoreCommit;
-import io.smallrye.reactive.messaging.kafka.fault.KafkaFailureHandler;
-import io.smallrye.reactive.messaging.kafka.fault.KafkaIgnoreFailure;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;
+
+import com.xabe.avro.v1.Car;
+import com.xabe.avro.v1.CarCreated;
+import com.xabe.avro.v1.CarUpdated;
+import com.xabe.avro.v1.MessageEnvelope;
+import com.xabe.avro.v1.Metadata;
+import io.smallrye.faulttolerance.api.CircuitBreakerMaintenance;
+import io.smallrye.reactive.messaging.kafka.IncomingKafkaRecord;
+import io.smallrye.reactive.messaging.kafka.KafkaClientService;
+import io.smallrye.reactive.messaging.kafka.commit.KafkaCommitHandler;
+import io.smallrye.reactive.messaging.kafka.commit.KafkaIgnoreCommit;
+import io.smallrye.reactive.messaging.kafka.fault.KafkaFailureHandler;
+import io.smallrye.reactive.messaging.kafka.fault.KafkaIgnoreFailure;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +41,9 @@ class CarProcessorTest {
   @BeforeEach
   public void setUp() throws Exception {
     this.eventHandler = mock(EventHandler.class);
-    this.carProcessor = new CarProcessor(Map.of(CarCreated.class, this.eventHandler));
+    this.carProcessor =
+        new CarProcessor(Map.of(CarCreated.class, this.eventHandler), mock(KafkaClientService.class),
+            mock(CircuitBreakerMaintenance.class));
   }
 
   @Test
